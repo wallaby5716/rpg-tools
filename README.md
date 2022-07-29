@@ -12,14 +12,23 @@ OR
 
 ###Mythic Oracle
 - choose likelihood of yes answer with slider
+
 - formulate yes/no question and click ask question button
-example: What are the odds my character knows of X relic?
-its not impossible, maybe 2nd tick from left
+
+example:
+
 Question: Does my character know of relic X?
-*click*
+
+its not impossible, maybe 2nd tick from left
+
+*click 'ask' button*
+
 strong yes: read a reference book on it
+
 yes: heard of it
+
 no: haven't heard of it
+
 strong no: not only have you not heard of it, but neither has anyone else
 
 ###UNE universal npc emulator? or something idk what the E is.

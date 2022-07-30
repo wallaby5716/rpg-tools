@@ -32,10 +32,35 @@ var roll_mod = 0
 var roll_advantage = "n"
 var CUSTOM_ENABLED = false
 
+const TOOLS = ["diceroller", "mythicgme", "une"]
+
 func _ready():
     randomize()
     load_UNE_words()
     generate_npc(roll_dice(1,100), roll_dice(1,100))
+    $ButtonToggleDiceRoller.flat = true
+    show_tool("diceroller")
+
+func show_tool(tool_name):
+    hide_all_tools()
+    match tool_name:
+        "diceroller":
+            $DiceRoller.set("focus/ignore_mouse", false)
+            $DiceRoller.show()
+        "mythicgme":
+            $MythicGME.set("focus/ignore_mouse", false)
+            $MythicGME.show()
+        "une":
+            $UNE.set("focus/ignore_mouse", false)
+            $UNE.show()
+
+func hide_all_tools():
+    $DiceRoller.set("focus/ignore_mouse", true)
+    $DiceRoller.hide()
+    $MythicGME.set("focus/ignore_mouse", true)
+    $MythicGME.hide()
+    $UNE.set("focus/ignore_mouse", true)
+    $UNE.hide()
 
 func roll_dice(number, sides, mod=0):
     var first
@@ -90,7 +115,6 @@ func generate_npc(npc_roll, motiv_roll):
     var motivation_noun = UNE_NPC_MOTIVATION_NOUNS[motiv_roll[1]-1]
     var green = "[color=#00ff00]"
     $UNE/ColorRect/LabelGeneratedCharacter.bbcode_text = "[center][b]" + "Character is a(n):\n" + green + npc_mod.capitalize() + " " + npc_noun.capitalize() +"\n[color=#ffffff]Whose goal is to:\n" + green + motivation_verb.capitalize() + " " + motivation_noun.capitalize()
-    #print("[center][b]" + "Character is a(n):\n" + npc_mod.capitalize() + " " + npc_noun.capitalize() +"\n[color=#ffffff]Whose goal is to:\n" + motivation_verb.capitalize() + " " + motivation_noun.capitalize())
 
 func validate_dice_number_to_roll(text=null):
     var new_val = $DiceRoller/TextRollValue.text.to_int()
@@ -224,6 +248,7 @@ func _on_ButtonCustom_pressed():
     $DiceRoller/ButtonD100.flat = false
 
 func _on_ButtonRollDice_pressed():
+    print("ROLLING")
     var green = "[color=#00ff00]"
     var red = "[color=#ff0000]"
     if !CUSTOM_ENABLED:
@@ -323,3 +348,21 @@ func _on_OptionAdvantage_pressed():
 func _on_SliderLikelihood_value_changed(value):
     mythic_odds = MYTHIC_GME_ODDS[value]
     #print(mythic_odds)
+
+func _on_ButtonToggleDiceRoller_pressed():
+    $ButtonToggleDiceRoller.flat = true
+    $ButtonToggleMythicOracle.flat = false
+    $ButtonToggleUNE.flat = false
+    show_tool("diceroller")
+
+func _on_ButtonToggleMythicOracle_pressed():
+    $ButtonToggleMythicOracle.flat = true
+    $ButtonToggleDiceRoller.flat = false
+    $ButtonToggleUNE.flat = false
+    show_tool("mythicgme")
+
+func _on_ButtonToggleUNE_pressed():
+    $ButtonToggleUNE.flat = true
+    $ButtonToggleMythicOracle.flat = false
+    $ButtonToggleDiceRoller.flat = false
+    show_tool("une")

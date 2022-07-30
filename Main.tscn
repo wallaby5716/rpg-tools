@@ -1,4 +1,4 @@
-[gd_scene load_steps=8 format=2]
+[gd_scene load_steps=9 format=2]
 
 [ext_resource path="res://fonts/mononoki-Bold.ttf" type="DynamicFontData" id=1]
 [ext_resource path="res://Main.gd" type="Script" id=2]
@@ -17,6 +17,10 @@ size = 48
 font_data = ExtResource( 1 )
 
 [sub_resource type="DynamicFont" id=2]
+size = 64
+font_data = ExtResource( 1 )
+
+[sub_resource type="DynamicFont" id=5]
 size = 64
 font_data = ExtResource( 1 )
 
@@ -40,12 +44,9 @@ __meta__ = {
 
 [node name="DiceRoller" type="Control" parent="."]
 anchor_right = 1.0
-margin_top = 40.0
+margin_top = 200.0
 margin_right = 1080.0
-margin_bottom = 442.0
-__meta__ = {
-"_edit_lock_": true
-}
+margin_bottom = 602.0
 
 [node name="ButtonPlusFive" type="Button" parent="DiceRoller"]
 anchor_left = 1.0
@@ -293,12 +294,9 @@ __meta__ = {
 anchor_top = 0.5
 anchor_right = 1.0
 anchor_bottom = 0.5
-margin_top = 995.0
+margin_top = 171.0
 margin_right = 1080.0
-margin_bottom = 1909.0
-__meta__ = {
-"_edit_lock_": true
-}
+margin_bottom = 1085.0
 
 [node name="MythicBanner" type="ColorRect" parent="MythicGME"]
 anchor_bottom = 0.212
@@ -436,12 +434,9 @@ tick_count = 7
 ticks_on_borders = true
 
 [node name="UNE" type="Control" parent="."]
-margin_top = 1747.0
+margin_top = 225.0
 margin_right = 1080.0
-margin_bottom = 2465.0
-__meta__ = {
-"_edit_lock_": true
-}
+margin_bottom = 943.0
 
 [node name="UNEBanner" type="ColorRect" parent="UNE"]
 anchor_bottom = 0.212
@@ -506,6 +501,39 @@ __meta__ = {
 "_edit_lock_": true
 }
 
+[node name="ButtonToggleDiceRoller" type="Button" parent="."]
+margin_left = 40.0
+margin_top = 96.0
+margin_right = 196.0
+margin_bottom = 175.0
+custom_fonts/font = SubResource( 5 )
+text = "DICE"
+__meta__ = {
+"_edit_lock_": true
+}
+
+[node name="ButtonToggleMythicOracle" type="Button" parent="."]
+margin_left = 208.0
+margin_top = 96.0
+margin_right = 436.0
+margin_bottom = 175.0
+custom_fonts/font = SubResource( 5 )
+text = "MYTHIC"
+__meta__ = {
+"_edit_lock_": true
+}
+
+[node name="ButtonToggleUNE" type="Button" parent="."]
+margin_left = 448.0
+margin_top = 96.0
+margin_right = 568.0
+margin_bottom = 175.0
+custom_fonts/font = SubResource( 5 )
+text = "UNE"
+__meta__ = {
+"_edit_lock_": true
+}
+
 [connection signal="pressed" from="DiceRoller/ButtonPlusFive" to="." method="_on_ButtonPlusFive_pressed"]
 [connection signal="pressed" from="DiceRoller/ButtonPlusOne" to="." method="_on_ButtonPlusOne_pressed"]
 [connection signal="pressed" from="DiceRoller/ButtonMinusFive" to="." method="_on_ButtonMinusFive_pressed"]
@@ -524,3 +552,6 @@ __meta__ = {
 [connection signal="pressed" from="MythicGME/ButtonRollOracle" to="." method="_on_ButtonRollOracle_pressed"]
 [connection signal="value_changed" from="MythicGME/SliderLikelihood" to="." method="_on_SliderLikelihood_value_changed"]
 [connection signal="pressed" from="UNE/ButtonGenerate" to="." method="_on_ButtonGenerate_pressed"]
+[connection signal="pressed" from="ButtonToggleDiceRoller" to="." method="_on_ButtonToggleDiceRoller_pressed"]
+[connection signal="pressed" from="ButtonToggleMythicOracle" to="." method="_on_ButtonToggleMythicOracle_pressed"]
+[connection signal="pressed" from="ButtonToggleUNE" to="." method="_on_ButtonToggleUNE_pressed"]

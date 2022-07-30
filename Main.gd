@@ -34,6 +34,8 @@ var CUSTOM_ENABLED = false
 
 const TOOLS = ["diceroller", "mythicgme", "une"]
 
+#TODO makde dict of different tools and make swapping between them less copy-pastey
+
 func _ready():
     randomize()
     load_UNE_words()
@@ -319,9 +321,6 @@ func _on_ButtonRollDice_pressed():
             result_string = str(result[0])
 
         $DiceRoller/RollResultBanner/LabelResult.bbcode_text = "[center][b]" + roll_string + mod_string + ":\n" + result_string
-
-func _on_OptionLikelihood_item_selected(index):
-    mythic_odds = MYTHIC_GME_ODDS[index]
 
 func _on_ButtonRollOracle_pressed():
     mythic_get_oracle_result()

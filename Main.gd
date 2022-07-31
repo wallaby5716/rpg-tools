@@ -35,12 +35,15 @@ var CUSTOM_ENABLED = false
 const TOOLS = ["diceroller", "mythicgme", "une"]
 
 #TODO makde dict of different tools and make swapping between them less copy-pastey
+# make custom roll button toggle on and off
+# add visible dice rolling probability curves for the current roll, show where your roll is on the distribution
 
 func _ready():
     randomize()
     load_UNE_words()
     generate_npc(roll_dice(1,100), roll_dice(1,100))
     $ButtonToggleDiceRoller.flat = true
+    $DiceRoller/ButtonD6.flat = true
     show_tool("diceroller")
 
 func show_tool(tool_name):
@@ -76,6 +79,52 @@ func roll_dice(number, sides, mod=0):
         total += randi() % sides + 1
     second = total + mod
     return [first, second]
+
+func get_odds(number, sides, mod):
+    var result_range = [number + mod, (number * sides) + mod]
+    var odds = []
+    var probabilities = {}
+    var terms_original = [] #polynomial list of [power, coefficient] of each term.
+    var result_terms = []
+
+    if number == 1:
+        for i in range(result_range[0] - mod, result_range[1] - mod + 1):
+            result_terms.append([i, float(1) / float(sides)])
+        for rt in result_terms:
+            if probabilities.has(rt[0]):
+                probabilities[rt[0]] += rt[1]
+            else:
+                probabilities[rt[0]] = rt[1]
+    else:
+        var number_of_outcomes = pow(sides, number)
+        var number_of_unique_outcomes
+        #for each unique possible outcome
+        for i in range(1, sides  + 1):
+            #                     power, coefficient
+            terms_original.append([i, 1.0 / float(sides)])
+        var terms2 = terms_original.duplicate(true)
+        for i in range(number - 1):
+            #for each term in our current polynomial
+            for t in terms_original:
+                #for each term in the base dice polynomial
+                for tm in terms2:
+                    #                   power, coefficient
+                    result_terms.append([t[0] + tm[0], t[1] * tm[1]])
+            #result_terms.sort()
+        for rt in result_terms:
+            if probabilities.has(rt[0]):
+                probabilities[rt[0]] += rt[1]
+            else:
+                probabilities[rt[0]] = rt[1]
+        number_of_unique_outcomes = probabilities.size()
+            #so each term is 1/sides * x ^ unique outcome
+            #we add this polynomial together as many times as we have dice.
+            #then we throw in x which is the number we want to roll, and solve and we get probability?
+
+        #print("Unique Outcomes: ", number_of_unique_outcomes, " Total Outcomes: ", number_of_outcomes)
+        for i in range(result_range[0] - mod, result_range[1] - mod + 1):
+            odds.append(float(1) / float(sides))
+    return probabilities
 
 func mythic_get_oracle_result():
     var reply = ""
@@ -128,6 +177,41 @@ func validate_dice_number_to_roll(text=null):
         new_val = 1
     roll_number = new_val
 
+func _on_ButtonRollOracle_pressed():
+    mythic_get_oracle_result()
+
+func _on_ButtonGenerate_pressed():
+    var npc_roll = roll_dice(1,100)
+    var motiv_roll = roll_dice(1,100)
+    generate_npc(npc_roll, motiv_roll)
+
+func _on_SliderLikelihood_value_changed(value):
+    mythic_odds = MYTHIC_GME_ODDS[value]
+    #print(mythic_odds)
+
+func _on_ButtonToggleDiceRoller_pressed():
+    $ButtonToggleDiceRoller.flat = true
+    $ButtonToggleMythicOracle.flat = false
+    $ButtonToggleUNE.flat = false
+    show_tool("diceroller")
+
+func _on_ButtonToggleMythicOracle_pressed():
+    $ButtonToggleMythicOracle.flat = true
+    $ButtonToggleDiceRoller.flat = false
+    $ButtonToggleUNE.flat = false
+    show_tool("mythicgme")
+
+func _on_ButtonToggleUNE_pressed():
+    $ButtonToggleUNE.flat = true
+    $ButtonToggleMythicOracle.flat = false
+    $ButtonToggleDiceRoller.flat = false
+    show_tool("une")
+
+#===================================================================================================
+#===================================================================================================
+##=======================================DICE ROLLER================================================
+#===================================================================================================
+#===================================================================================================
 func _on_TextRollValue_text_entered(new_text):
     validate_dice_number_to_roll(new_text)
     $DiceRoller/TextRollValue.text = str(roll_number)
@@ -239,21 +323,28 @@ func _on_ButtonD100_pressed():
     $DiceRoller/ButtonD100.flat = true
 
 func _on_ButtonCustom_pressed():
-    CUSTOM_ENABLED = true
-    $DiceRoller/ButtonCustom.flat = true
-    $DiceRoller/ButtonD4.flat = false
-    $DiceRoller/ButtonD6.flat = false
-    $DiceRoller/ButtonD8.flat = false
-    $DiceRoller/ButtonD10.flat = false
-    $DiceRoller/ButtonD12.flat = false
-    $DiceRoller/ButtonD20.flat = false
-    $DiceRoller/ButtonD100.flat = false
+    if CUSTOM_ENABLED:
+        CUSTOM_ENABLED = false
+    else:
+        CUSTOM_ENABLED = true
+    if CUSTOM_ENABLED:
+        $DiceRoller/ButtonCustom.flat = true
+        $DiceRoller/ButtonD4.flat = false
+        $DiceRoller/ButtonD6.flat = false
+        $DiceRoller/ButtonD8.flat = false
+        $DiceRoller/ButtonD10.flat = false
+        $DiceRoller/ButtonD12.flat = false
+        $DiceRoller/ButtonD20.flat = false
+        $DiceRoller/ButtonD100.flat = false
+    else:
+        $DiceRoller/ButtonCustom.flat = false
 
 func _on_ButtonRollDice_pressed():
-    print("ROLLING")
+    #print("ROLLING")
     var green = "[color=#00ff00]"
     var red = "[color=#ff0000]"
     if !CUSTOM_ENABLED:
+        #print(get_odds(roll_number, roll_sides, roll_mod))
         var result = roll_dice(roll_number, roll_sides, roll_mod)
         var roll_string = str(roll_number) + "d" + str(roll_sides)
         var mod_string = ""
@@ -302,6 +393,7 @@ func _on_ButtonRollDice_pressed():
 
         custom_number = dice_string[0].to_int()
         custom_sides = dice_string[1].to_int()
+        print(get_odds(custom_number, custom_sides, custom_mod))
         var result = roll_dice(custom_number, custom_sides, custom_mod)
         var roll_string = str(custom_number) + "d" + str(custom_sides)
         var mod_string = ""
@@ -322,46 +414,20 @@ func _on_ButtonRollDice_pressed():
 
         $DiceRoller/RollResultBanner/LabelResult.bbcode_text = "[center][b]" + roll_string + mod_string + ":\n" + result_string
 
-func _on_ButtonRollOracle_pressed():
-    mythic_get_oracle_result()
+func _on_ButtonAdvantage_pressed():
+    roll_advantage = "a"
+    $DiceRoller/ButtonAdvantage.flat = true
+    $DiceRoller/ButtonNormal.flat = false
+    $DiceRoller/ButtonDisadvantage.flat = false
 
-func _on_ButtonGenerate_pressed():
-    var npc_roll = roll_dice(1,100)
-    var motiv_roll = roll_dice(1,100)
-    generate_npc(npc_roll, motiv_roll)
+func _on_ButtonNormal_pressed():
+    roll_advantage = "n"
+    $DiceRoller/ButtonAdvantage.flat = false
+    $DiceRoller/ButtonNormal.flat = true
+    $DiceRoller/ButtonDisadvantage.flat = false
 
-func _on_OptionAdvantage_pressed():
-    if roll_advantage == "a":
-        roll_advantage = "n"
-        $DiceRoller/OptionAdvantage.text = "Adv [Norm] Dis"
-    elif roll_advantage == "n":
-        roll_advantage = "d"
-        $DiceRoller/OptionAdvantage.text = "Adv Norm [Dis]"
-    elif roll_advantage == "d":
-        roll_advantage = "a"
-        $DiceRoller/OptionAdvantage.text = "[Adv] Norm Dis"
-    else:
-        roll_advantage = "n"
-        $DiceRoller/OptionAdvantage.text = "Adv [Norm] Dis"
-
-func _on_SliderLikelihood_value_changed(value):
-    mythic_odds = MYTHIC_GME_ODDS[value]
-    #print(mythic_odds)
-
-func _on_ButtonToggleDiceRoller_pressed():
-    $ButtonToggleDiceRoller.flat = true
-    $ButtonToggleMythicOracle.flat = false
-    $ButtonToggleUNE.flat = false
-    show_tool("diceroller")
-
-func _on_ButtonToggleMythicOracle_pressed():
-    $ButtonToggleMythicOracle.flat = true
-    $ButtonToggleDiceRoller.flat = false
-    $ButtonToggleUNE.flat = false
-    show_tool("mythicgme")
-
-func _on_ButtonToggleUNE_pressed():
-    $ButtonToggleUNE.flat = true
-    $ButtonToggleMythicOracle.flat = false
-    $ButtonToggleDiceRoller.flat = false
-    show_tool("une")
+func _on_ButtonDisadvantage_pressed():
+    roll_advantage = "d"
+    $DiceRoller/ButtonAdvantage.flat = false
+    $DiceRoller/ButtonNormal.flat = false
+    $DiceRoller/ButtonDisadvantage.flat = true

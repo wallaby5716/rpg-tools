@@ -48,12 +48,35 @@ margin_top = 200.0
 margin_right = 1080.0
 margin_bottom = 602.0
 
+[node name="DiceRollerBanner" type="ColorRect" parent="DiceRoller"]
+anchor_bottom = 0.212
+margin_left = 40.0
+margin_top = -2.0
+margin_right = 1040.0
+margin_bottom = 18.776
+color = Color( 0.368627, 0, 0, 1 )
+__meta__ = {
+"_edit_lock_": true
+}
+
+[node name="LabelDiceRoller" type="Label" parent="DiceRoller/DiceRollerBanner"]
+anchor_top = 0.0142232
+anchor_bottom = 0.0142232
+margin_top = 2.0
+margin_right = 1000.0
+margin_bottom = 111.0
+custom_fonts/font = SubResource( 1 )
+text = "DICE ROLLER"
+align = 1
+valign = 1
+
 [node name="ButtonPlusFive" type="Button" parent="DiceRoller"]
 anchor_left = 1.0
 anchor_right = 1.0
 margin_left = -160.0
+margin_top = 392.0
 margin_right = -40.0
-margin_bottom = 115.0
+margin_bottom = 507.0
 custom_fonts/font = SubResource( 1 )
 text = "+5"
 __meta__ = {
@@ -64,8 +87,9 @@ __meta__ = {
 anchor_left = 0.5
 anchor_right = 0.5
 margin_left = 200.25
+margin_top = 392.0
 margin_right = 320.25
-margin_bottom = 115.0
+margin_bottom = 507.0
 custom_fonts/font = SubResource( 1 )
 text = "+1"
 __meta__ = {
@@ -74,8 +98,9 @@ __meta__ = {
 
 [node name="ButtonMinusFive" type="Button" parent="DiceRoller"]
 margin_left = 40.0
-margin_right = 48.0
-margin_bottom = 43.0
+margin_top = 392.0
+margin_right = 160.0
+margin_bottom = 507.0
 custom_fonts/font = SubResource( 1 )
 text = "-5"
 __meta__ = {
@@ -86,8 +111,9 @@ __meta__ = {
 anchor_left = 0.5
 anchor_right = 0.5
 margin_left = -320.0
+margin_top = 392.0
 margin_right = -200.0
-margin_bottom = 115.0
+margin_bottom = 507.0
 custom_fonts/font = SubResource( 1 )
 text = "-1"
 __meta__ = {
@@ -98,8 +124,9 @@ __meta__ = {
 anchor_left = 0.5
 anchor_right = 0.5
 margin_left = -150.0
+margin_top = 392.0
 margin_right = 150.0
-margin_bottom = 119.0
+margin_bottom = 511.0
 rect_min_size = Vector2( 300, 0 )
 custom_constants/minimum_spaces = 5
 custom_fonts/font = SubResource( 1 )
@@ -115,9 +142,9 @@ __meta__ = {
 anchor_top = 0.5
 anchor_bottom = 0.5
 margin_left = 40.0
-margin_top = -57.0
+margin_top = 335.0
 margin_right = 153.0
-margin_bottom = 58.0
+margin_bottom = 450.0
 custom_fonts/font = SubResource( 3 )
 text = "D4"
 __meta__ = {
@@ -130,9 +157,9 @@ anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
 margin_left = -364.0
-margin_top = -57.0
+margin_top = 335.0
 margin_right = -244.0
-margin_bottom = 58.0
+margin_bottom = 450.0
 custom_fonts/font = SubResource( 3 )
 text = "D6"
 __meta__ = {
@@ -143,9 +170,9 @@ __meta__ = {
 anchor_top = 0.5
 anchor_bottom = 0.5
 margin_left = 318.0
-margin_top = -57.0
+margin_top = 335.0
 margin_right = 438.0
-margin_bottom = 58.0
+margin_bottom = 450.0
 custom_fonts/font = SubResource( 3 )
 text = "D8"
 __meta__ = {
@@ -158,9 +185,9 @@ anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
 margin_left = -82.0
-margin_top = -57.0
+margin_top = 335.0
 margin_right = 41.0
-margin_bottom = 58.0
+margin_bottom = 450.0
 custom_fonts/font = SubResource( 3 )
 text = "D10"
 __meta__ = {
@@ -173,9 +200,9 @@ anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
 margin_left = 61.0
-margin_top = -57.0
+margin_top = 335.0
 margin_right = 185.0
-margin_bottom = 58.0
+margin_bottom = 450.0
 custom_fonts/font = SubResource( 3 )
 text = "D12"
 __meta__ = {
@@ -188,9 +215,9 @@ anchor_top = 0.5
 anchor_right = 1.0
 anchor_bottom = 0.5
 margin_left = -336.0
-margin_top = -57.0
+margin_top = 335.0
 margin_right = -216.0
-margin_bottom = 58.0
+margin_bottom = 450.0
 custom_fonts/font = SubResource( 3 )
 text = "D20"
 __meta__ = {
@@ -203,9 +230,9 @@ anchor_top = 0.5
 anchor_right = 1.0
 anchor_bottom = 0.5
 margin_left = -196.0
-margin_top = -57.0
+margin_top = 335.0
 margin_right = -40.0
-margin_bottom = 58.0
+margin_bottom = 450.0
 custom_fonts/font = SubResource( 3 )
 text = "D100"
 __meta__ = {
@@ -216,9 +243,9 @@ __meta__ = {
 anchor_top = 1.0
 anchor_bottom = 1.0
 margin_left = 40.0
-margin_top = -112.0
+margin_top = -216.0
 margin_right = 376.0
-margin_bottom = 8.0
+margin_bottom = -96.0
 custom_fonts/font = SubResource( 1 )
 text = "Custom"
 __meta__ = {
@@ -231,9 +258,9 @@ anchor_top = 1.0
 anchor_right = 1.0
 anchor_bottom = 1.0
 margin_left = -688.0
-margin_top = -114.0
+margin_top = -218.0
 margin_right = -39.0
-margin_bottom = 9.0
+margin_bottom = -95.0
 custom_constants/minimum_spaces = 0
 custom_fonts/font = SubResource( 1 )
 max_length = 32
@@ -242,13 +269,35 @@ __meta__ = {
 "_edit_lock_": true
 }
 
-[node name="OptionAdvantage" type="Button" parent="DiceRoller"]
+[node name="ButtonAdvantage" type="Button" parent="DiceRoller"]
 margin_left = 40.0
-margin_top = 438.0
-margin_right = 1040.0
-margin_bottom = 555.0
+margin_top = 750.0
+margin_right = 334.0
+margin_bottom = 867.0
 custom_fonts/font = SubResource( 1 )
-text = "Adv [Norm] Dis"
+text = "Adv."
+__meta__ = {
+"_edit_lock_": true
+}
+
+[node name="ButtonNormal" type="Button" parent="DiceRoller"]
+margin_left = 389.0
+margin_top = 750.0
+margin_right = 692.0
+margin_bottom = 867.0
+custom_fonts/font = SubResource( 1 )
+text = "Norm"
+__meta__ = {
+"_edit_lock_": true
+}
+
+[node name="ButtonDisadvantage" type="Button" parent="DiceRoller"]
+margin_left = 748.0
+margin_top = 750.0
+margin_right = 1039.0
+margin_bottom = 867.0
+custom_fonts/font = SubResource( 1 )
+text = "Dis."
 __meta__ = {
 "_edit_lock_": true
 }
@@ -258,9 +307,9 @@ anchor_top = 1.0
 anchor_right = 1.0
 anchor_bottom = 1.0
 margin_left = 40.0
-margin_top = 176.0
+margin_top = 568.0
 margin_right = -40.0
-margin_bottom = 291.0
+margin_bottom = 683.0
 custom_fonts/font = SubResource( 1 )
 text = "Roll Dice"
 __meta__ = {
@@ -269,9 +318,9 @@ __meta__ = {
 
 [node name="RollResultBanner" type="ColorRect" parent="DiceRoller"]
 margin_left = 40.0
-margin_top = 720.0
+margin_top = 1112.0
 margin_right = 1040.0
-margin_bottom = 947.0
+margin_bottom = 1339.0
 color = Color( 0.270588, 0.270588, 0.270588, 1 )
 __meta__ = {
 "_edit_lock_": true
@@ -282,15 +331,14 @@ margin_right = 1000.0
 margin_bottom = 237.0
 custom_fonts/bold_font = SubResource( 1 )
 bbcode_enabled = true
-bbcode_text = "[center][b]Just click roll already b-baka~
-"
-text = "Just click roll already b-baka~
-"
+bbcode_text = "[center][b]click that ^"
+text = "click that ^"
 __meta__ = {
 "_edit_lock_": true
 }
 
 [node name="MythicGME" type="Control" parent="."]
+visible = false
 anchor_top = 0.5
 anchor_right = 1.0
 anchor_bottom = 0.5
@@ -312,15 +360,13 @@ __meta__ = {
 [node name="LabelMythicSection" type="Label" parent="MythicGME/MythicBanner"]
 anchor_top = 0.0142232
 anchor_bottom = 0.0142232
+margin_top = 3.0
 margin_right = 1000.0
-margin_bottom = 109.0
+margin_bottom = 112.0
 custom_fonts/font = SubResource( 1 )
 text = "MYTHIC ORACLE"
 align = 1
 valign = 1
-__meta__ = {
-"_edit_lock_": true
-}
 
 [node name="ButtonRollOracle" type="Button" parent="MythicGME"]
 anchor_top = 1.01422
@@ -432,8 +478,12 @@ value = 3.0
 rounded = true
 tick_count = 7
 ticks_on_borders = true
+__meta__ = {
+"_edit_lock_": true
+}
 
 [node name="UNE" type="Control" parent="."]
+visible = false
 margin_top = 225.0
 margin_right = 1080.0
 margin_bottom = 943.0
@@ -443,7 +493,7 @@ anchor_bottom = 0.212
 margin_left = 40.0
 margin_top = -29.0
 margin_right = 1040.0
-margin_bottom = -68.216
+margin_bottom = -75.216
 color = Color( 0.352941, 0, 0, 1 )
 __meta__ = {
 "_edit_lock_": true
@@ -534,6 +584,11 @@ __meta__ = {
 "_edit_lock_": true
 }
 
+[node name="Camera2D" type="Camera2D" parent="."]
+position = Vector2( 554, 1165 )
+current = true
+zoom = Vector2( 2, 2 )
+
 [connection signal="pressed" from="DiceRoller/ButtonPlusFive" to="." method="_on_ButtonPlusFive_pressed"]
 [connection signal="pressed" from="DiceRoller/ButtonPlusOne" to="." method="_on_ButtonPlusOne_pressed"]
 [connection signal="pressed" from="DiceRoller/ButtonMinusFive" to="." method="_on_ButtonMinusFive_pressed"]
@@ -547,7 +602,9 @@ __meta__ = {
 [connection signal="pressed" from="DiceRoller/ButtonD20" to="." method="_on_ButtonD20_pressed"]
 [connection signal="pressed" from="DiceRoller/ButtonD100" to="." method="_on_ButtonD100_pressed"]
 [connection signal="pressed" from="DiceRoller/ButtonCustom" to="." method="_on_ButtonCustom_pressed"]
-[connection signal="pressed" from="DiceRoller/OptionAdvantage" to="." method="_on_OptionAdvantage_pressed"]
+[connection signal="pressed" from="DiceRoller/ButtonAdvantage" to="." method="_on_ButtonAdvantage_pressed"]
+[connection signal="pressed" from="DiceRoller/ButtonNormal" to="." method="_on_ButtonNormal_pressed"]
+[connection signal="pressed" from="DiceRoller/ButtonDisadvantage" to="." method="_on_ButtonDisadvantage_pressed"]
 [connection signal="pressed" from="DiceRoller/ButtonRollDice" to="." method="_on_ButtonRollDice_pressed"]
 [connection signal="pressed" from="MythicGME/ButtonRollOracle" to="." method="_on_ButtonRollOracle_pressed"]
 [connection signal="value_changed" from="MythicGME/SliderLikelihood" to="." method="_on_SliderLikelihood_value_changed"]

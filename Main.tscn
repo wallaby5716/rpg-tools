@@ -589,6 +589,12 @@ position = Vector2( 554, 1165 )
 current = true
 zoom = Vector2( 2, 2 )
 
+[node name="ControlDistributionArea" type="Control" parent="."]
+margin_left = 40.0
+margin_top = 1622.0
+margin_right = 1040.0
+margin_bottom = 2183.0
+
 [connection signal="pressed" from="DiceRoller/ButtonPlusFive" to="." method="_on_ButtonPlusFive_pressed"]
 [connection signal="pressed" from="DiceRoller/ButtonPlusOne" to="." method="_on_ButtonPlusOne_pressed"]
 [connection signal="pressed" from="DiceRoller/ButtonMinusFive" to="." method="_on_ButtonMinusFive_pressed"]

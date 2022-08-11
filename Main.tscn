@@ -1,4 +1,4 @@
-[gd_scene load_steps=9 format=2]
+[gd_scene load_steps=11 format=2]
 
 [ext_resource path="res://fonts/mononoki-Bold.ttf" type="DynamicFontData" id=1]
 [ext_resource path="res://Main.gd" type="Script" id=2]
@@ -10,6 +10,10 @@ font_data = ExtResource( 1 )
 
 [sub_resource type="DynamicFont" id=3]
 size = 64
+font_data = ExtResource( 1 )
+
+[sub_resource type="DynamicFont" id=7]
+size = 96
 font_data = ExtResource( 1 )
 
 [sub_resource type="DynamicFont" id=4]
@@ -24,8 +28,11 @@ font_data = ExtResource( 1 )
 size = 64
 font_data = ExtResource( 1 )
 
+[sub_resource type="DynamicFont" id=6]
+size = 196
+font_data = ExtResource( 1 )
+
 [node name="Main" type="Node2D"]
-position = Vector2( 0, 13 )
 script = ExtResource( 2 )
 __meta__ = {
 "_edit_horizontal_guides_": [ 102.0, 2574.0 ],
@@ -34,16 +41,16 @@ __meta__ = {
 
 [node name="Background" type="ColorRect" parent="."]
 anchor_right = 1.0
-anchor_bottom = 1.0
+margin_top = -1.0
 margin_right = 1080.0
-margin_bottom = 2400.0
+margin_bottom = 2399.0
 color = Color( 0.0784314, 0.0784314, 0.0784314, 1 )
 __meta__ = {
 "_edit_lock_": true
 }
 
 [node name="DiceRoller" type="Control" parent="."]
-anchor_right = 1.0
+visible = false
 margin_top = 200.0
 margin_right = 1080.0
 margin_bottom = 602.0
@@ -130,7 +137,6 @@ margin_bottom = 511.0
 rect_min_size = Vector2( 300, 0 )
 custom_constants/minimum_spaces = 5
 custom_fonts/font = SubResource( 1 )
-text = "1"
 align = 1
 max_length = 5
 placeholder_text = "1"
@@ -337,6 +343,70 @@ __meta__ = {
 "_edit_lock_": true
 }
 
+[node name="RectCustomEnabled" type="ColorRect" parent="DiceRoller"]
+margin_left = 40.0
+margin_top = 392.0
+margin_right = 1040.0
+margin_bottom = 652.0
+mouse_filter = 2
+color = Color( 0.25098, 0.25098, 0.25098, 0.756863 )
+__meta__ = {
+"_edit_lock_": true
+}
+
+[node name="RectCustomDisable" type="ColorRect" parent="DiceRoller"]
+margin_left = 40.0
+margin_top = 137.0
+margin_right = 1040.0
+margin_bottom = 351.0
+mouse_filter = 2
+color = Color( 0.25098, 0.25098, 0.25098, 0.756863 )
+__meta__ = {
+"_edit_lock_": true
+}
+
+[node name="RollInfoBanner" type="ColorRect" parent="DiceRoller"]
+anchor_bottom = 0.212
+margin_left = 40.0
+margin_top = 1438.0
+margin_right = 1040.0
+margin_bottom = 1458.78
+color = Color( 0.368627, 0, 0, 1 )
+
+[node name="LabelDiceRoller" type="Label" parent="DiceRoller/RollInfoBanner"]
+anchor_top = 0.0142232
+anchor_bottom = 0.0142232
+margin_top = 2.0
+margin_right = 1000.0
+margin_bottom = 111.0
+custom_fonts/font = SubResource( 1 )
+text = "Roll Info"
+align = 1
+valign = 1
+
+[node name="LabelRollInfoMin" type="RichTextLabel" parent="DiceRoller/RollInfoBanner"]
+margin_top = 150.0
+margin_right = 313.0
+margin_bottom = 712.0
+custom_fonts/bold_font = SubResource( 7 )
+bbcode_enabled = true
+
+[node name="LabelRollInfoAvg" type="RichTextLabel" parent="DiceRoller/RollInfoBanner"]
+margin_left = 344.0
+margin_top = 150.0
+margin_right = 657.0
+margin_bottom = 726.0
+custom_fonts/bold_font = SubResource( 7 )
+bbcode_enabled = true
+
+[node name="LabelRollInfoMax" type="RichTextLabel" parent="DiceRoller/RollInfoBanner"]
+margin_left = 685.0
+margin_top = 150.0
+margin_right = 998.0
+margin_bottom = 726.0
+custom_fonts/bold_font = SubResource( 7 )
+bbcode_enabled = true
+
 [node name="MythicGME" type="Control" parent="."]
 visible = false
 anchor_top = 0.5
@@ -349,20 +419,17 @@ margin_bottom = 1085.0
 [node name="MythicBanner" type="ColorRect" parent="MythicGME"]
 anchor_bottom = 0.212
 margin_left = 40.0
-margin_top = 25.0
+margin_top = 27.0
 margin_right = 1040.0
 margin_bottom = -62.768
 color = Color( 0.352941, 0, 0, 1 )
-__meta__ = {
-"_edit_lock_": true
-}
 
 [node name="LabelMythicSection" type="Label" parent="MythicGME/MythicBanner"]
 anchor_top = 0.0142232
 anchor_bottom = 0.0142232
-margin_top = 3.0
+margin_top = 2.0
 margin_right = 1000.0
-margin_bottom = 112.0
+margin_bottom = 111.0
 custom_fonts/font = SubResource( 1 )
 text = "MYTHIC ORACLE"
 align = 1
@@ -387,26 +454,20 @@ anchor_bottom = 0.044
 margin_left = 40.0
 margin_top = 459.0
 margin_right = 1040.0
-margin_bottom = 657.784
+margin_bottom = 538.784
 color = Color( 0.270588, 0.270588, 0.270588, 1 )
-__meta__ = {
-"_edit_lock_": true
-}
 
 [node name="LabelOracleResult" type="RichTextLabel" parent="MythicGME"]
 anchor_top = 0.0142232
 anchor_bottom = 0.0142232
 margin_left = 40.0
-margin_top = 443.0
+margin_top = 447.0
 margin_right = 1040.0
-margin_bottom = 679.0
+margin_bottom = 567.0
 custom_fonts/bold_font = SubResource( 1 )
 bbcode_enabled = true
-bbcode_text = "[center][b] Select odds, ask yes/no question."
-text = " Select odds, ask yes/no question."
-__meta__ = {
-"_edit_lock_": true
-}
+bbcode_text = "[center][b]hmm.."
+text = "hmm.."
 
 [node name="Low" type="Label" parent="MythicGME"]
 margin_left = 40.0
@@ -585,9 +646,9 @@ __meta__ = {
 }
 
 [node name="Camera2D" type="Camera2D" parent="."]
-position = Vector2( 554, 1165 )
-current = true
-zoom = Vector2( 2, 2 )
+visible = false
+position = Vector2( 540, 1200 )
+zoom = Vector2( 2, 2.4 )
 
 [node name="ControlDistributionArea" type="Control" parent="."]
 margin_left = 40.0
@@ -595,10 +656,27 @@ margin_top = 1622.0
 margin_right = 1040.0
 margin_bottom = 2183.0
 
+[node name="CRASH_NOTIFY" type="Label" parent="."]
+visible = false
+margin_left = -37.0
+margin_top = 401.0
+margin_right = 1151.0
+margin_bottom = 1091.0
+custom_fonts/font = SubResource( 6 )
+text = "VERY
+BAD
+CUSTOM
+STRING"
+align = 1
+valign = 1
+
 [connection signal="pressed" from="DiceRoller/ButtonPlusFive" to="." method="_on_ButtonPlusFive_pressed"]
 [connection signal="pressed" from="DiceRoller/ButtonPlusOne" to="." method="_on_ButtonPlusOne_pressed"]
 [connection signal="pressed" from="DiceRoller/ButtonMinusFive" to="." method="_on_ButtonMinusFive_pressed"]
 [connection signal="pressed" from="DiceRoller/ButtonMinusOne" to="." method="_on_ButtonMinusOne_pressed"]
+[connection signal="focus_entered" from="DiceRoller/TextRollValue" to="." method="_on_TextRollValue_focus_entered"]
+[connection signal="focus_exited" from="DiceRoller/TextRollValue" to="." method="_on_TextRollValue_focus_exited"]
+[connection signal="text_changed" from="DiceRoller/TextRollValue" to="." method="_on_TextRollValue_text_changed"]
 [connection signal="text_entered" from="DiceRoller/TextRollValue" to="." method="_on_TextRollValue_text_entered"]
 [connection signal="pressed" from="DiceRoller/ButtonD4" to="." method="_on_ButtonD4_pressed"]
 [connection signal="pressed" from="DiceRoller/ButtonD6" to="." method="_on_ButtonD6_pressed"]
@@ -608,6 +686,7 @@ margin_bottom = 2183.0
 [connection signal="pressed" from="DiceRoller/ButtonD20" to="." method="_on_ButtonD20_pressed"]
 [connection signal="pressed" from="DiceRoller/ButtonD100" to="." method="_on_ButtonD100_pressed"]
 [connection signal="pressed" from="DiceRoller/ButtonCustom" to="." method="_on_ButtonCustom_pressed"]
+[connection signal="focus_entered" from="DiceRoller/TextCustomRoll" to="." method="_on_TextCustomRoll_focus_entered"]
 [connection signal="pressed" from="DiceRoller/ButtonAdvantage" to="." method="_on_ButtonAdvantage_pressed"]
 [connection signal="pressed" from="DiceRoller/ButtonNormal" to="." method="_on_ButtonNormal_pressed"]
 [connection signal="pressed" from="DiceRoller/ButtonDisadvantage" to="." method="_on_ButtonDisadvantage_pressed"]

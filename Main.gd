@@ -44,6 +44,9 @@ func _ready():
     generate_npc(roll_dice(1,100), roll_dice(1,100))
     $ButtonToggleDiceRoller.flat = true
     $DiceRoller/ButtonD6.flat = true
+    $DiceRoller/ButtonNormal.flat = true
+    $DiceRoller/RectCustomDisable.show()
+    $DiceRoller/RectCustomEnabled.hide()
     show_tool("diceroller")
 
 func show_tool(tool_name):
@@ -80,51 +83,48 @@ func roll_dice(number, sides, mod=0):
     second = total + mod
     return [first, second]
 
+func get_subtotal(subtotal_array):
+    print(subtotal_array)
+    var total = 0
+    var total2 = 0
+    match roll_advantage:
+        "n":
+            for r in subtotal_array:
+                total += r[0]
+        "d":
+            for r in subtotal_array:
+                r.sort()
+                total += r[0]
+                total2 += r[1]
+        "a":
+            for r in subtotal_array:
+                r.sort()
+                total += r[1]
+                total2 += r[0]
+    return [total, total2]
+
+#d4.txt
+#odds of rolling 1 - x*y on xdy
+#.25,.25,.25,.25
+#2d4
+#3d4
+#...
 func get_odds(number, sides, mod):
     var result_range = [number + mod, (number * sides) + mod]
-    var odds = []
-    var probabilities = {}
-    var terms_original = [] #polynomial list of [power, coefficient] of each term.
-    var result_terms = []
-
-    if number == 1:
-        for i in range(result_range[0] - mod, result_range[1] - mod + 1):
-            result_terms.append([i, float(1) / float(sides)])
-        for rt in result_terms:
-            if probabilities.has(rt[0]):
-                probabilities[rt[0]] += rt[1]
-            else:
-                probabilities[rt[0]] = rt[1]
-    else:
-        var number_of_outcomes = pow(sides, number)
-        var number_of_unique_outcomes
-        #for each unique possible outcome
-        for i in range(1, sides  + 1):
-            #                     power, coefficient
-            terms_original.append([i, 1.0 / float(sides)])
-        var terms2 = terms_original.duplicate(true)
-        for i in range(number - 1):
-            #for each term in our current polynomial
-            for t in terms_original:
-                #for each term in the base dice polynomial
-                for tm in terms2:
-                    #                   power, coefficient
-                    result_terms.append([t[0] + tm[0], t[1] * tm[1]])
-            #result_terms.sort()
-        for rt in result_terms:
-            if probabilities.has(rt[0]):
-                probabilities[rt[0]] += rt[1]
-            else:
-                probabilities[rt[0]] = rt[1]
-        number_of_unique_outcomes = probabilities.size()
-            #so each term is 1/sides * x ^ unique outcome
-            #we add this polynomial together as many times as we have dice.
-            #then we throw in x which is the number we want to roll, and solve and we get probability?
-
-        #print("Unique Outcomes: ", number_of_unique_outcomes, " Total Outcomes: ", number_of_outcomes)
-        for i in range(result_range[0] - mod, result_range[1] - mod + 1):
-            odds.append(float(1) / float(sides))
-    return probabilities
+    var average_total = 0
+    for i in range(10000):
+        var roll = roll_dice(number, sides)
+        match roll_advantage:
+            "n":
+                average_total += roll[0]
+            "a":
+                roll.sort()
+                average_total += roll[1]
+            "d":
+                roll.sort()
+                average_total += roll[0]
+    var avg = stepify(float(average_total) / 10000.0, 0.1)
+    return [result_range[0] + mod, avg + mod, result_range[1] + mod]
 
 func mythic_get_oracle_result():
     var reply = ""
@@ -140,7 +140,7 @@ func mythic_get_oracle_result():
     else:
         color = "[color=#ff0000]"
         reply = MYTHIC_ORACLE_REPLIES[3]
-    $MythicGME/LabelOracleResult.bbcode_text = "[center][b]Rolled " + str(roll) + ":\n" + color + reply
+    $MythicGME/LabelOracleResult.bbcode_text = "[center][b]" + color + reply
 
 func wordlist_to_array(file):
     var word_array = []
@@ -171,9 +171,9 @@ func validate_dice_number_to_roll(text=null):
     var new_val = $DiceRoller/TextRollValue.text.to_int()
     if text != null:
         new_val = text.to_int()
-    print(new_val)
+    #print(new_val)
     if str(new_val).length() == 0 or new_val < 1:
-        print("here")
+        #print("here")
         new_val = 1
     roll_number = new_val
 
@@ -212,36 +212,56 @@ func _on_ButtonToggleUNE_pressed():
 ##=======================================DICE ROLLER================================================
 #===================================================================================================
 #===================================================================================================
+func leave_custom_mode():
+    CUSTOM_ENABLED = false
+    $DiceRoller/ButtonCustom.flat = false
+    $DiceRoller/RectCustomDisable.show()
+    $DiceRoller/RectCustomEnabled.hide()
+
+func _on_TextRollValue_focus_entered():
+    leave_custom_mode()
+
 func _on_TextRollValue_text_entered(new_text):
     validate_dice_number_to_roll(new_text)
     $DiceRoller/TextRollValue.text = str(roll_number)
     OS.hide_virtual_keyboard()
-    $DiceRoller/ButtonRollDice.grab_focus()
+    #$DiceRoller/ButtonRollDice.grab_focus()
+    leave_custom_mode()
+
+func _on_TextRollValue_focus_exited():
+    validate_dice_number_to_roll($DiceRoller/TextRollValue.text)
+    $DiceRoller/TextRollValue.text = str(roll_number)
+    OS.hide_virtual_keyboard()
+    #$DiceRoller/ButtonRollDice.grab_focus()
+    leave_custom_mode()
 
 func _on_ButtonPlusFive_pressed():
     roll_number += 5
     $DiceRoller/TextRollValue.text = str(roll_number)
+    leave_custom_mode()
 
 func _on_ButtonPlusOne_pressed():
     roll_number += 1
     $DiceRoller/TextRollValue.text = str(roll_number)
+    leave_custom_mode()
 
 func _on_ButtonMinusFive_pressed():
     roll_number -= 5
     if roll_number < 1:
         roll_number = 1
     $DiceRoller/TextRollValue.text = str(roll_number)
+    leave_custom_mode()
 
 func _on_ButtonMinusOne_pressed():
     roll_number -= 1
     if roll_number < 1:
         roll_number = 1
     $DiceRoller/TextRollValue.text = str(roll_number)
+    leave_custom_mode()
 
 func _on_ButtonD4_pressed():
     roll_sides = 4
-    CUSTOM_ENABLED = false
-    $DiceRoller/ButtonCustom.flat = false
+    leave_custom_mode()
     $DiceRoller/ButtonD4.flat = true
     $DiceRoller/ButtonD6.flat = false
     $DiceRoller/ButtonD8.flat = false
@@ -252,8 +272,7 @@ func _on_ButtonD4_pressed():
 
 func _on_ButtonD6_pressed():
     roll_sides = 6
-    CUSTOM_ENABLED = false
-    $DiceRoller/ButtonCustom.flat = false
+    leave_custom_mode()
     $DiceRoller/ButtonD4.flat = false
     $DiceRoller/ButtonD6.flat = true
     $DiceRoller/ButtonD8.flat = false
@@ -264,8 +283,7 @@ func _on_ButtonD6_pressed():
 
 func _on_ButtonD8_pressed():
     roll_sides = 8
-    CUSTOM_ENABLED = false
-    $DiceRoller/ButtonCustom.flat = false
+    leave_custom_mode()
     $DiceRoller/ButtonD4.flat = false
     $DiceRoller/ButtonD6.flat = false
     $DiceRoller/ButtonD8.flat = true
@@ -276,8 +294,7 @@ func _on_ButtonD8_pressed():
 
 func _on_ButtonD10_pressed():
     roll_sides = 10
-    CUSTOM_ENABLED = false
-    $DiceRoller/ButtonCustom.flat = false
+    leave_custom_mode()
     $DiceRoller/ButtonD4.flat = false
     $DiceRoller/ButtonD6.flat = false
     $DiceRoller/ButtonD8.flat = false
@@ -288,8 +305,7 @@ func _on_ButtonD10_pressed():
 
 func _on_ButtonD12_pressed():
     roll_sides = 12
-    CUSTOM_ENABLED = false
-    $DiceRoller/ButtonCustom.flat = false
+    leave_custom_mode()
     $DiceRoller/ButtonD4.flat = false
     $DiceRoller/ButtonD6.flat = false
     $DiceRoller/ButtonD8.flat = false
@@ -300,8 +316,7 @@ func _on_ButtonD12_pressed():
 
 func _on_ButtonD20_pressed():
     roll_sides = 20
-    CUSTOM_ENABLED = false
-    $DiceRoller/ButtonCustom.flat = false
+    leave_custom_mode()
     $DiceRoller/ButtonD4.flat = false
     $DiceRoller/ButtonD6.flat = false
     $DiceRoller/ButtonD8.flat = false
@@ -312,8 +327,7 @@ func _on_ButtonD20_pressed():
 
 func _on_ButtonD100_pressed():
     roll_sides = 100
-    CUSTOM_ENABLED = false
-    $DiceRoller/ButtonCustom.flat = false
+    leave_custom_mode()
     $DiceRoller/ButtonD4.flat = false
     $DiceRoller/ButtonD6.flat = false
     $DiceRoller/ButtonD8.flat = false
@@ -322,11 +336,28 @@ func _on_ButtonD100_pressed():
     $DiceRoller/ButtonD20.flat = false
     $DiceRoller/ButtonD100.flat = true
 
+func _on_TextCustomRoll_focus_entered():
+    CUSTOM_ENABLED = true
+    $DiceRoller/RectCustomDisable.hide()
+    $DiceRoller/RectCustomEnabled.show()
+    $DiceRoller/ButtonCustom.flat = true
+    $DiceRoller/ButtonD4.flat = false
+    $DiceRoller/ButtonD6.flat = false
+    $DiceRoller/ButtonD8.flat = false
+    $DiceRoller/ButtonD10.flat = false
+    $DiceRoller/ButtonD12.flat = false
+    $DiceRoller/ButtonD20.flat = false
+    $DiceRoller/ButtonD100.flat = false
+
 func _on_ButtonCustom_pressed():
     if CUSTOM_ENABLED:
         CUSTOM_ENABLED = false
+        $DiceRoller/RectCustomDisable.show()
+        $DiceRoller/RectCustomEnabled.hide()
     else:
         CUSTOM_ENABLED = true
+        $DiceRoller/RectCustomDisable.hide()
+        $DiceRoller/RectCustomEnabled.show()
     if CUSTOM_ENABLED:
         $DiceRoller/ButtonCustom.flat = true
         $DiceRoller/ButtonD4.flat = false
@@ -364,55 +395,77 @@ func _on_ButtonRollDice_pressed():
             result_string = str(result[0])
 
         $DiceRoller/RollResultBanner/LabelResult.bbcode_text = "[center][b]" + roll_string + mod_string + ":\n" + result_string
+        var roll_info_array = get_odds(roll_number, roll_sides, roll_mod)
+        $DiceRoller/RollInfoBanner/LabelRollInfoMin.bbcode_text = "[center][b]" + red + "Min\n" + str(roll_info_array[0])
+        $DiceRoller/RollInfoBanner/LabelRollInfoAvg.bbcode_text = "[center][b]" + "Avg\n" +  str(roll_info_array[1])
+        $DiceRoller/RollInfoBanner/LabelRollInfoMax.bbcode_text = "[center][b]" + green + "Max\n" + str(roll_info_array[2])
     else: #custom roll string
-        var custom_number = 1
-        var custom_sides = 2
-        var custom_mod = 0
-        var dice_string
         var input_string = $DiceRoller/TextCustomRoll.text
-        var plus_found = input_string.count("+")
-        var minus_found = input_string.count("-")
-        if plus_found > 0 and minus_found > 0:
-            $DiceRoller/TextCustomRoll.text = "Bad String"
-            $DiceRoller/RollResultBanner/LabelResult.bbcode_text = "[center][b]Bad Custom String."
-            return
-        elif plus_found == 1:
-            input_string = input_string.split("+")
-            custom_mod = input_string[1].to_int()
-            dice_string = input_string[0].split("d")
-        elif minus_found == 1:
-            input_string = input_string.split("-")
-            custom_mod = input_string[1].to_int() * -1
-            dice_string = input_string[0].split("d")
-        elif plus_found == 0 and minus_found == 0:
-            dice_string = input_string.split("d")
-        else:
-            $DiceRoller/TextCustomRoll.text = "Bad String"
-            $DiceRoller/RollResultBanner/LabelResult.bbcode_text = "[center][b]Bad Custom String."
-            return
+        var OPERATORS = "+-"
 
-        custom_number = dice_string[0].to_int()
-        custom_sides = dice_string[1].to_int()
-        print(get_odds(custom_number, custom_sides, custom_mod))
-        var result = roll_dice(custom_number, custom_sides, custom_mod)
-        var roll_string = str(custom_number) + "d" + str(custom_sides)
-        var mod_string = ""
-        if custom_mod != 0:
-            if custom_mod > 0:
-                mod_string = " + " + str(custom_mod)
+        input_string = input_string.replace("+", " + ").replace("-", " - ")
+
+        var substrs = input_string.split(" ")
+        var roll_odds = []
+        var probabilities = []
+        var subtotal = []
+        var custom_total = 0
+        var roll_string = ""
+        var mods = 0
+
+        var pos_neg = 1
+        #print("AAAA: ",substrs)
+
+        for subs in substrs:
+            if subs.strip_edges() == "":
+                continue
+            if "+" in subs:
+                pos_neg = 1
+            elif "-" in subs:
+                pos_neg = -1
+            elif "d" in subs:
+                var die_info = subs.split("d")
+                if die_info.size() > 1:
+                    probabilities.append([pos_neg, get_odds(int(die_info[0]), int(die_info[1]), 0)])
+                    var roll = roll_dice(int(die_info[0]), int(die_info[1]))
+                    roll[0] *= pos_neg
+                    roll[1] *= pos_neg
+                    subtotal.append(roll)
             else:
-                mod_string = " - " + str(int(abs(custom_mod)))
-        var result_string
-        if roll_advantage != "n":
-            result.sort()
-            if roll_advantage == "a":
-                result_string = green + str(result[1]) + "[color=#ffffff] (" + str(result[0]) + ")"
-            elif roll_advantage == "d":
-                result_string = red + str(result[0]) + "[color=#ffffff] (" + str(result[1]) + ")"
-        else:
-            result_string = str(result[0])
+                mods += pos_neg * int(subs)
+            roll_string += subs.strip_edges()
+            roll_string += " "
 
-        $DiceRoller/RollResultBanner/LabelResult.bbcode_text = "[center][b]" + roll_string + mod_string + ":\n" + result_string
+        #print(probabilities, "\n", subtotal, "\n", mods)
+        custom_total = get_subtotal(subtotal)
+        var result_string = ""
+        match roll_advantage:
+            "a":
+                result_string += green + str(custom_total[0] + mods) + "[color=#ffffff] (" + str(custom_total[1] + mods) + ")"
+            "n":
+                result_string = str(custom_total[0] + mods)
+            "d":
+                result_string += red + str(custom_total[0] + mods) + "[color=#ffffff] (" + str(custom_total[1] + mods) + ")"
+        #print("subtotal: ", subtotal, "\nSubtotal Added: ", custom_total)
+        $DiceRoller/RollResultBanner/LabelResult.bbcode_text = "[center][b][color=#999999]" + roll_string.rstrip(" ") +  ":\n[color=#ffffff]" + result_string
+        var min_roll = mods
+        var avg_roll = mods
+        var max_roll = mods
+
+        for die in probabilities:
+            #print(die)
+            if die[0] > 0:
+                min_roll += die[0] * die[1][0]
+                avg_roll += die[0] * die[1][1]
+                max_roll += die[0] * die[1][2]
+            if die[0] < 0:
+                min_roll += die[0] * die[1][2]
+                avg_roll += die[0] * die[1][1]
+                max_roll += die[0] * die[1][0]
+
+        $DiceRoller/RollInfoBanner/LabelRollInfoMin.bbcode_text = "[center][b]" + red + "Min\n" + str(min_roll)
+        $DiceRoller/RollInfoBanner/LabelRollInfoAvg.bbcode_text = "[center][b]" + "Avg\n" +  str(avg_roll)
+        $DiceRoller/RollInfoBanner/LabelRollInfoMax.bbcode_text = "[center][b]" + green + "Max\n" + str(max_roll)
 
 func _on_ButtonAdvantage_pressed():
     roll_advantage = "a"
@@ -431,3 +484,12 @@ func _on_ButtonDisadvantage_pressed():
     $DiceRoller/ButtonAdvantage.flat = false
     $DiceRoller/ButtonNormal.flat = false
     $DiceRoller/ButtonDisadvantage.flat = true
+
+
+
+
+
+
+
+
+

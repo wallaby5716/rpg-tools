@@ -103,12 +103,6 @@ func get_subtotal(subtotal_array):
                 total2 += r[0]
     return [total, total2]
 
-#d4.txt
-#odds of rolling 1 - x*y on xdy
-#.25,.25,.25,.25
-#2d4
-#3d4
-#...
 func get_odds(number, sides, mod):
     var result_range = [number + mod, (number * sides) + mod]
     var average_total = 0
@@ -126,6 +120,16 @@ func get_odds(number, sides, mod):
     var avg = stepify(float(average_total) / 10000.0, 0.1)
     return [result_range[0] + mod, avg + mod, result_range[1] + mod]
 
+func validate_dice_number_to_roll(text=null):
+    var new_val = $DiceRoller/TextRollValue.text.to_int()
+    if text != null:
+        new_val = text.to_int()
+    #print(new_val)
+    if str(new_val).length() == 0 or new_val < 1:
+        #print("here")
+        new_val = 1
+    roll_number = new_val
+
 func mythic_get_oracle_result():
     var reply = ""
     var color = "[color=#00ff00]"
@@ -141,6 +145,41 @@ func mythic_get_oracle_result():
         color = "[color=#ff0000]"
         reply = MYTHIC_ORACLE_REPLIES[3]
     $MythicGME/LabelOracleResult.bbcode_text = "[center][b]" + color + reply
+
+func _on_ButtonRollOracle_pressed():
+    mythic_get_oracle_result()
+
+func _on_SliderLikelihood_value_changed(value):
+    mythic_odds = MYTHIC_GME_ODDS[value]
+
+func _on_ButtonToggleDiceRoller_pressed():
+    $ButtonToggleDiceRoller.flat = true
+    $ButtonToggleMythicOracle.flat = false
+    $ButtonToggleUNE.flat = false
+    show_tool("diceroller")
+
+func _on_ButtonToggleMythicOracle_pressed():
+    $ButtonToggleMythicOracle.flat = true
+    $ButtonToggleDiceRoller.flat = false
+    $ButtonToggleUNE.flat = false
+    show_tool("mythicgme")
+
+#===================================================================================================
+#===================================================================================================
+##=======================================U    N    E================================================
+#===================================================================================================
+#===================================================================================================
+
+func _on_ButtonToggleUNE_pressed():
+    $ButtonToggleUNE.flat = true
+    $ButtonToggleMythicOracle.flat = false
+    $ButtonToggleDiceRoller.flat = false
+    show_tool("une")
+
+func _on_ButtonGenerate_pressed():
+    var npc_roll = roll_dice(1,100)
+    var motiv_roll = roll_dice(1,100)
+    generate_npc(npc_roll, motiv_roll)
 
 func wordlist_to_array(file):
     var word_array = []
@@ -166,46 +205,6 @@ func generate_npc(npc_roll, motiv_roll):
     var motivation_noun = UNE_NPC_MOTIVATION_NOUNS[motiv_roll[1]-1]
     var green = "[color=#00ff00]"
     $UNE/ColorRect/LabelGeneratedCharacter.bbcode_text = "[center][b]" + "Character is a(n):\n" + green + npc_mod.capitalize() + " " + npc_noun.capitalize() +"\n[color=#ffffff]Whose goal is to:\n" + green + motivation_verb.capitalize() + " " + motivation_noun.capitalize()
-
-func validate_dice_number_to_roll(text=null):
-    var new_val = $DiceRoller/TextRollValue.text.to_int()
-    if text != null:
-        new_val = text.to_int()
-    #print(new_val)
-    if str(new_val).length() == 0 or new_val < 1:
-        #print("here")
-        new_val = 1
-    roll_number = new_val
-
-func _on_ButtonRollOracle_pressed():
-    mythic_get_oracle_result()
-
-func _on_ButtonGenerate_pressed():
-    var npc_roll = roll_dice(1,100)
-    var motiv_roll = roll_dice(1,100)
-    generate_npc(npc_roll, motiv_roll)
-
-func _on_SliderLikelihood_value_changed(value):
-    mythic_odds = MYTHIC_GME_ODDS[value]
-    #print(mythic_odds)
-
-func _on_ButtonToggleDiceRoller_pressed():
-    $ButtonToggleDiceRoller.flat = true
-    $ButtonToggleMythicOracle.flat = false
-    $ButtonToggleUNE.flat = false
-    show_tool("diceroller")
-
-func _on_ButtonToggleMythicOracle_pressed():
-    $ButtonToggleMythicOracle.flat = true
-    $ButtonToggleDiceRoller.flat = false
-    $ButtonToggleUNE.flat = false
-    show_tool("mythicgme")
-
-func _on_ButtonToggleUNE_pressed():
-    $ButtonToggleUNE.flat = true
-    $ButtonToggleMythicOracle.flat = false
-    $ButtonToggleDiceRoller.flat = false
-    show_tool("une")
 
 #===================================================================================================
 #===================================================================================================
@@ -484,12 +483,3 @@ func _on_ButtonDisadvantage_pressed():
     $DiceRoller/ButtonAdvantage.flat = false
     $DiceRoller/ButtonNormal.flat = false
     $DiceRoller/ButtonDisadvantage.flat = true
-
-
-
-
-
-
-
-
-

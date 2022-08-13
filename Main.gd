@@ -33,11 +33,7 @@ var roll_advantage = "n"
 var CUSTOM_ENABLED = false
 var roll_history = []
 
-const TOOLS = ["diceroller", "mythicgme", "une"]
-
-#TODO makde dict of different tools and make swapping between them less copy-pastey
-# make custom roll button toggle on and off
-# add visible dice rolling probability curves for the current roll, show where your roll is on the distribution
+#const TOOLS = ["diceroller", "mythicgme", "une"]
 
 func _ready():
     randomize()
@@ -64,12 +60,11 @@ func show_tool(tool_name):
             $UNE.show()
 
 func hide_all_tools():
-    $DiceRoller.set("focus/ignore_mouse", true)
-    $DiceRoller.hide()
-    $MythicGME.set("focus/ignore_mouse", true)
-    $MythicGME.hide()
-    $UNE.set("focus/ignore_mouse", true)
-    $UNE.hide()
+    var c = get_children()
+    for child in c:
+        if child.get_class() == "Control":
+            child.set("focus/ignore_mouse", true)
+            child.hide()
 
 func roll_dice(number, sides, mod=0):
     var first

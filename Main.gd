@@ -25,15 +25,13 @@ const MYTHIC_ORACLE_REPLIES = [
 var mythic_odds = MYTHIC_GME_ODDS[3]
 
 #DICE ROLLER VARS
-enum ADVANTAGE_OPTIONS {ADVANTAGE, NORMAL, DISADVANTAGE}
+#enum ADVANTAGE_OPTIONS {ADVANTAGE, NORMAL, DISADVANTAGE}
 var roll_number = 1
 var roll_sides = 6
 var roll_mod = 0
 var roll_advantage = "n"
 var CUSTOM_ENABLED = false
 var roll_history = []
-
-#const TOOLS = ["diceroller", "mythicgme", "une"]
 
 func _ready():
     randomize()
@@ -173,17 +171,17 @@ func _on_ButtonToggleMythicOracle_pressed():
     $ButtonToggleUNE.flat = false
     show_tool("mythicgme")
 
-#===================================================================================================
-#===================================================================================================
-##=======================================U    N    E================================================
-#===================================================================================================
-#===================================================================================================
-
 func _on_ButtonToggleUNE_pressed():
     $ButtonToggleUNE.flat = true
     $ButtonToggleMythicOracle.flat = false
     $ButtonToggleDiceRoller.flat = false
     show_tool("une")
+
+#===================================================================================================
+#===================================================================================================
+##=======================================U    N    E================================================
+#===================================================================================================
+#===================================================================================================
 
 func _on_ButtonGenerate_pressed():
     var npc_roll = roll_dice(1,100)
@@ -218,7 +216,7 @@ func generate_npc(npc_roll, motiv_roll):
 #===================================================================================================
 #===================================================================================================
 ##=======================================DICE ROLLER================================================
-#===================================================================================================
+#==========================================BUTTONS==================================================
 #===================================================================================================
 func leave_custom_mode():
     CUSTOM_ENABLED = false
@@ -393,6 +391,7 @@ func _on_ButtonCustom_pressed():
         $DiceRoller/ButtonCustom.flat = false
 
 func _on_ButtonRollDice_pressed():
+    $DiceRoller/RollResultBanner/LabelResult.scroll_to_line(0)
     var roll_adv_string
     match roll_advantage:
         "n":

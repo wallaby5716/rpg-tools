@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/slider_ticks.png-8efe57463bbbfe970e382ac796cf2fd0.stex"
+path="res://.import/slider_ticks.png-495d08a5652a3e054c423365feacaa1d.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://slider_ticks.png"
-dest_files=[ "res://.import/slider_ticks.png-8efe57463bbbfe970e382ac796cf2fd0.stex" ]
+source_file="res://assets/slider_ticks.png"
+dest_files=[ "res://.import/slider_ticks.png-495d08a5652a3e054c423365feacaa1d.stex" ]
 
 [params]
 

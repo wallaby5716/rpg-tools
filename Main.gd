@@ -1,5 +1,7 @@
 extends Node2D
 
+const CONFIG_FILE = "user://config.cfg"
+
 #UNE VARS
 var UNE_NPC_MODIFIERS
 var UNE_NPC_NOUNS
@@ -33,20 +35,31 @@ var roll_advantage = "n"
 var CUSTOM_ENABLED = false
 var roll_history = []
 
+#set main tool to open to in settings
+
 func _ready():
+    var DESKTOP = false
+    if DESKTOP:
+        var screen_res = OS.get_screen_size()
+        var cam_height_ratio = (screen_res[1] * 3/4) / 2400
+        OS.set_window_size(Vector2(1080 * cam_height_ratio, (screen_res[1] * 3/4)))
     randomize()
     load_UNE_words()
     generate_npc(roll_dice(1,100), roll_dice(1,100))
-    $ButtonToggleDiceRoller.flat = true
+    $ControlToolbox/ButtonToggleDiceRoller.flat = true
     $DiceRoller/ButtonD6.flat = true
     $DiceRoller/ButtonNormal.flat = true
     $DiceRoller/RectCustomDisable.show()
     $DiceRoller/RectCustomEnabled.hide()
     show_tool("diceroller")
+    #$ControlToolbox/ScrollbarTools.hide()
 
 func show_tool(tool_name):
     hide_all_tools()
     match tool_name:
+        "settings":
+            $Settings.set("focus/ignore_mouse", false)
+            $Settings.show()
         "diceroller":
             $DiceRoller.set("focus/ignore_mouse", false)
             $DiceRoller.show()
@@ -60,9 +73,12 @@ func show_tool(tool_name):
 func hide_all_tools():
     var c = get_children()
     for child in c:
-        if child.get_class() == "Control":
+        if child.get_class() == "Control" and child.name != "ControlToolbox":
             child.set("focus/ignore_mouse", true)
             child.hide()
+
+
+
 
 func roll_dice(number, sides, mod=0):
     var first
@@ -137,6 +153,8 @@ func validate_dice_number_to_roll(text=null):
         new_val = 1
     roll_number = new_val
 
+
+
 func mythic_get_oracle_result():
     var reply = ""
     var color = "[color=#00ff00]"
@@ -160,21 +178,21 @@ func _on_SliderLikelihood_value_changed(value):
     mythic_odds = MYTHIC_GME_ODDS[value]
 
 func _on_ButtonToggleDiceRoller_pressed():
-    $ButtonToggleDiceRoller.flat = true
-    $ButtonToggleMythicOracle.flat = false
-    $ButtonToggleUNE.flat = false
+#    $ButtonToggleDiceRoller.flat = true
+#    $ButtonToggleMythicOracle.flat = false
+#    $ButtonToggleUNE.flat = false
     show_tool("diceroller")
 
 func _on_ButtonToggleMythicOracle_pressed():
-    $ButtonToggleMythicOracle.flat = true
-    $ButtonToggleDiceRoller.flat = false
-    $ButtonToggleUNE.flat = false
+#    $ButtonToggleMythicOracle.flat = true
+#    $ButtonToggleDiceRoller.flat = false
+#    $ButtonToggleUNE.flat = false
     show_tool("mythicgme")
 
 func _on_ButtonToggleUNE_pressed():
-    $ButtonToggleUNE.flat = true
-    $ButtonToggleMythicOracle.flat = false
-    $ButtonToggleDiceRoller.flat = false
+#    $ButtonToggleUNE.flat = true
+#    $ButtonToggleMythicOracle.flat = false
+#    $ButtonToggleDiceRoller.flat = false
     show_tool("une")
 
 #===================================================================================================
@@ -200,10 +218,10 @@ func wordlist_to_array(file):
     return word_array
 
 func load_UNE_words():
-    UNE_NPC_MODIFIERS = wordlist_to_array("res://NPC_MODIFIERS.txt")
-    UNE_NPC_NOUNS = wordlist_to_array("res://NPC_NOUNS.txt")
-    UNE_NPC_MOTIVATION_VERBS = wordlist_to_array("res://NPC_MOTIV_VERBS.txt")
-    UNE_NPC_MOTIVATION_NOUNS = wordlist_to_array("res://NPC_MOTIV_NOUNS.txt")
+    UNE_NPC_MODIFIERS = wordlist_to_array("res://tools/une/NPC_MODIFIERS.txt")
+    UNE_NPC_NOUNS = wordlist_to_array("res://tools/une/NPC_NOUNS.txt")
+    UNE_NPC_MOTIVATION_VERBS = wordlist_to_array("res://tools/une/NPC_MOTIV_VERBS.txt")
+    UNE_NPC_MOTIVATION_NOUNS = wordlist_to_array("res://tools/une/NPC_MOTIV_NOUNS.txt")
 
 func generate_npc(npc_roll, motiv_roll):
     var npc_mod = UNE_NPC_MODIFIERS[npc_roll[0]-1]
@@ -537,3 +555,13 @@ func _on_ButtonDisadvantage_pressed():
     $DiceRoller/ButtonAdvantage.flat = false
     $DiceRoller/ButtonNormal.flat = false
     $DiceRoller/ButtonDisadvantage.flat = true
+
+
+
+
+func _on_ButtonConfigure_pressed():
+    show_tool("settings")
+
+
+func _on_ScrollbarTools_value_changed(value):
+    print(value)

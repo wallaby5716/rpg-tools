@@ -14,6 +14,11 @@ config/name="android-app"
 run/main_scene="res://Main.tscn"
 config/icon="res://icon.png"
 
+[autoload]
+
+GlobalScene="*res://GlobalScene.tscn"
+Loading="*res://Loading.tscn"
+
 [display]
 
 window/size/width=1080

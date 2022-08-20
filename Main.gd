@@ -14,7 +14,7 @@ var ALL_TOOLS = {}
 var all_tool_buttons = {}
 
 func _ready():
-    #ProjectSettings.set_setting("global/version", "0.1.9")
+    ProjectSettings.set_setting("global/version", "0.2.0")
     randomize()
     Loading.show()
 

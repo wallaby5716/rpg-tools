@@ -19,28 +19,6 @@ func _ready():
     Loading.show()
 
     load_config()
-#    var old_version = false
-#    var local_tools_dir = Directory.new();
-#    var local_tools_dir_exists = local_tools_dir.dir_exists(LOCAL_TOOLS_PATH)
-#    if config_data.size() > 0:
-#        #print(config_data[0])
-#        old_version = !(config_data[0].split("=")[1] == ProjectSettings.get_setting("global/version"))
-#    if !config_exists:
-#        print("Config missing. Creating new config.")
-#        var dir = Directory.new()
-#        dir.open("res://")
-#        dir.copy("default_config.cfg", CONFIG_FILE)
-#        load_config()
-#    if old_version:
-#        if !local_tools_dir_exists:
-#            print("Running newer version, no local files found. All tools will be copied.")
-#            copy_tools_to_user_system()
-#        else:
-#            print("Running newer version, local files found. Not overwriting files.")
-#            #TODO just copy over new files, dont overwrite any local files/changes.
-#    if !local_tools_dir_exists:
-#        print("Local tools directory not found, copying tools...")
-#        copy_tools_to_user_system()
 
     load_all_tools(TOOLS_PATH)
     #we load all? tools then only enable/show the ones that are enabled in the config.
@@ -51,6 +29,8 @@ func _ready():
     make_all_tool_buttons()
     update_tool_buttons()
     hide_all_tools()
+    var open_tools = $ControlToolbox/ControlToolButtonsContainer/ButtonDrawer.get_children()
+    show_tool(open_tools[0].name.split("_")[0])
     Loading.hide()
 
     var DESKTOP = false
@@ -74,37 +54,6 @@ func dump_config():
         if !(t.name in badnames):
             config_file.store_string(ALL_TOOLS[t.name].name + "=" + str(t.get_node("CheckBox").pressed).to_lower() + "\n")
     config_file.close()
-
-func copy_tool(t):
-    var bad_extensions = ["tscn", "gd"]
-    var bad_dirs = ["", ".", ".."]
-    var dir = Directory.new()
-    dir.open(TOOLS_PATH + "/" + t)
-    dir.list_dir_begin()
-    var file = dir.get_next()
-    while file != "":
-        if !(file in bad_dirs) and !(file.get_extension() in bad_extensions):
-            dir.copy(TOOLS_PATH + "/" + t + "/" + file, LOCAL_TOOLS_PATH + "/" + t + "/" + file)
-            #print(str(dir.copy(TOOLS_PATH + "/" + t + "/" + file, LOCAL_TOOLS_PATH + "/" + t + "/" + file)) + " | " + file + " | " + LOCAL_TOOLS_PATH + "/" + t + "/" + file)
-        file = dir.get_next()
-    dir.list_dir_end()
-
-func copy_tools_to_user_system():
-    var bad_dirs = ["", ".", ".."]
-    var dir = Directory.new()
-    var local_dir = Directory.new()
-    local_dir.open(LOCAL_TOOLS_PATH)
-    dir.open(TOOLS_PATH)
-    dir.list_dir_begin()
-    var file = dir.get_next()
-    while file != "":
-        if dir.current_is_dir():
-            if !(file in bad_dirs):
-                #print(file)
-                local_dir.make_dir_recursive(LOCAL_TOOLS_PATH + "/" + file)
-                copy_tool(file)
-        file = dir.get_next()
-    dir.list_dir_end()
 
 func load_config():
     var directory = Directory.new();

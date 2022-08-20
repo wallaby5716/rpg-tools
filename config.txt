@@ -1,0 +1,5 @@
+version=0.1.9
+MythicGME=true
+DiceRoller=false
+RFIDTags=false
+UNE=true

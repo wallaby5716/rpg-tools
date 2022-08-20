@@ -46,7 +46,7 @@ func _notification(what):
 
 func dump_config():
     var config_file = File.new()
-    config_file.open(CONFIG_FILE, File.WRITE)
+    config_file.open("user://config.cfg", File.WRITE)
     config_file.store_string("version=" + ProjectSettings.get_setting("global/version") + "\n")
     var tool_settings = $MenuSettings/FuckyWuckyStopper/AllTools.get_children()
     var badnames = ["ToolSettingBase", "HeadingToolSetting"]
@@ -57,19 +57,28 @@ func dump_config():
 
 func load_config():
     var directory = Directory.new();
-    var exists = directory.file_exists(CONFIG_FILE)
-    if !exists:
-        return false
-    var config_file = File.new()
-    config_file.open(CONFIG_FILE, File.READ)
-    var index = 1
-    while not config_file.eof_reached(): # iterate through all lines until the end of file is reached
-        var line = config_file.get_line().strip_edges()
-        if line != "":
-            config_data.append(line)
-        index += 1
-    config_file.close()
+    var exists = directory.file_exists("user://config.cfg")
+    if exists:
+        var config_file = File.new()
+        config_file.open("user://config.cfg", File.READ)
+        var index = 1
+        while not config_file.eof_reached(): # iterate through all lines until the end of file is reached
+            var line = config_file.get_line().strip_edges()
+            if line != "":
+                config_data.append(line)
+            index += 1
+        config_file.close()
     #print(config_data.size(), "AAAAA")
+    else:
+        var config_file = File.new()
+        config_file.open(CONFIG_FILE, File.READ)
+        var index = 1
+        while not config_file.eof_reached(): # iterate through all lines until the end of file is reached
+            var line = config_file.get_line().strip_edges()
+            if line != "":
+                config_data.append(line)
+            index += 1
+        config_file.close()
     for i in range(config_data.size()):
         if i == 0:
             pass
@@ -162,10 +171,11 @@ func update_tool_buttons():
     for t in ALL_TOOLS.keys():
         #print(t, " ", enabled_tools[t])
         if enabled_tools[t] == "true":
-            var butt = $AllToolButtons.get_node(t + "_Button")
-            #print(butt)
-            $AllToolButtons.remove_child(butt)
-            $ControlToolbox/ControlToolButtonsContainer/ButtonDrawer.add_child(butt)
+            if $AllToolButtons.has_node(t + "_Button"):
+                var butt = $AllToolButtons.get_node(t + "_Button")
+                #print(butt)
+                $AllToolButtons.remove_child(butt)
+                $ControlToolbox/ControlToolButtonsContainer/ButtonDrawer.add_child(butt)
     yield(get_tree(), "idle_frame")
     var diff = $ControlToolbox/ControlToolButtonsContainer/ButtonDrawer.rect_size.x - $ControlToolbox/ControlToolButtonsContainer.rect_size.x
     #print($ControlToolbox.rect_size.x)

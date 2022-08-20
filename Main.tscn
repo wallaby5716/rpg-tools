@@ -152,6 +152,7 @@ grow_horizontal = 2
 grow_vertical = 2
 rect_rotation = 180.0
 theme = SubResource( 13 )
+pressed = true
 
 [node name="HeadingToolSetting" type="ColorRect" parent="MenuSettings/FuckyWuckyStopper/AllTools"]
 visible = false
@@ -175,6 +176,12 @@ margin_top = 145.0
 margin_right = 1001.0
 margin_bottom = 2082.0
 custom_styles/grabber = SubResource( 14 )
+
+[node name="AllToolButtons" type="Control" parent="."]
+visible = false
+margin_right = 40.0
+margin_bottom = 40.0
+mouse_filter = 2
 
 [connection signal="pressed" from="ControlToolbox/ButtonConfigure" to="." method="_on_ButtonConfigure_pressed"]
 [connection signal="value_changed" from="ControlToolbox/ScrollbarTools" to="." method="_on_ScrollbarTools_value_changed"]

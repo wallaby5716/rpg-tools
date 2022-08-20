@@ -32,6 +32,7 @@ window/stretch/mode="viewport"
 [global]
 
 debug=true
+version="0.1.9"
 
 [physics]
 

@@ -1,6 +1,7 @@
 extends Control
 
-const NAME = "DiceRoller"
+const DISPLAY_NAME = "DiceRoller"
+const TOOL_TYPE = "dice"
 
 var roll_number = 1
 var roll_sides = 6

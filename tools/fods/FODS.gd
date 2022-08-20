@@ -1,6 +1,7 @@
 extends Control
 
-const NAME = "FODS"
+const DISPLAY_NAME = "FODS"
+const TOOL_TYPE = "generator"
 
 var ACTIONS = []
 var DESCRIPTIONS = []

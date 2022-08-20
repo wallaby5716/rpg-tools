@@ -1,6 +1,7 @@
 extends Control
 
-const NAME = "UNE"
+const DISPLAY_NAME = "UNE"
+const TOOL_TYPE = "generator"
 
 var UNE_NPC_MODIFIERS
 var UNE_NPC_NOUNS

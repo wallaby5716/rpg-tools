@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/settings_button.png-1a9139fcec6de02554841c041c44866d.stex"
+path="res://.import/checkbox_unchecked.png-9d90961ac46036456fbb3ffa2fa85d82.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/settings_button.png"
-dest_files=[ "res://.import/settings_button.png-1a9139fcec6de02554841c041c44866d.stex" ]
+source_file="res://assets/checkbox_unchecked.png"
+dest_files=[ "res://.import/checkbox_unchecked.png-9d90961ac46036456fbb3ffa2fa85d82.stex" ]
 
 [params]
 

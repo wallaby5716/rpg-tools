@@ -1,6 +1,7 @@
 extends Control
 
-const NAME = "MythicGME"
+const DISPLAY_NAME = "MythicGME"
+const TOOL_TYPE = "oracle"
 
 const MYTHIC_GME_ODDS = [
     [3,15,74],

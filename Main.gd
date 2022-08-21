@@ -21,10 +21,7 @@ func _ready():
     load_config()
 
     load_all_tools(TOOLS_PATH)
-    #we load all? tools then only enable/show the ones that are enabled in the config.
-    #then we load tools from the user's files.
 
-    #can combine make_settings with make_all_tool_buttons, but separated for clarity
     make_settings_page()
     make_all_tool_buttons()
     update_tool_buttons()
@@ -55,6 +52,7 @@ func dump_config():
             config_file.store_string(ALL_TOOLS[t.name].name + "=" + str(t.get_node("CheckBox").pressed).to_lower() + "\n")
     config_file.close()
 
+#TODO if config exists and we are a different version, merge settings with new version tools
 func load_config():
     var directory = Directory.new();
     var exists = directory.file_exists("user://config.cfg")

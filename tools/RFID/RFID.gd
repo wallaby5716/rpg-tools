@@ -1,6 +1,6 @@
 extends Control
 
-const DISPLAY_NAME = "RFID Tags"
+const DISPLAY_NAME = "RFID"
 const TOOL_TYPE = "generator"
 
 var ACTIONS = []
@@ -15,9 +15,9 @@ func _ready():
 
 
 func load_words():
-    ACTIONS = GlobalScene.wordlist_to_array(GlobalScene.TOOLS_DATA_PATH + "/RFIDTags/" + "action.txt")
-    DESCRIPTIONS = GlobalScene.wordlist_to_array(GlobalScene.TOOLS_DATA_PATH + "/RFIDTags/" + "descriptor.txt")
-    SUBJECTS = GlobalScene.wordlist_to_array(GlobalScene.TOOLS_DATA_PATH + "/RFIDTags/" + "subject.txt")
+    ACTIONS = GlobalScene.wordlist_to_array(GlobalScene.TOOLS_DATA_PATH + "/RFID/" + "action.txt")
+    DESCRIPTIONS = GlobalScene.wordlist_to_array(GlobalScene.TOOLS_DATA_PATH + "/RFID/" + "descriptor.txt")
+    SUBJECTS = GlobalScene.wordlist_to_array(GlobalScene.TOOLS_DATA_PATH + "/RFID/" + "subject.txt")
 
 func _on_ButtonRoll_pressed():
     var rolls = [GlobalScene.roll_dice(1, ACTIONS.size()),

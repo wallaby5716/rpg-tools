@@ -32,6 +32,7 @@ func _ready():
 
 
 func _on_ButtonGenerate_pressed():
+    var clipboard_string = "YOU "
     if int(round(randf())) == 1:
         button_text.shuffle()
         $ButtonGenerate.text = button_text[0]
@@ -45,7 +46,9 @@ func _on_ButtonGenerate_pressed():
     var copy_of_connectors = CONNECTORS.duplicate(true)
     copy_of_connectors.shuffle()
     for i in range(odds[0]):
-        insult_string += "\n" + copy_of_connectors.pop_front().to_upper() + ","
+        var next_insult = copy_of_connectors.pop_front().to_upper()
+        insult_string += "\n" + next_insult + ","
+        clipboard_string += next_insult + ", "
     insult_string.erase(insult_string.length() - 1, 1)
     $LabelMiddle.bbcode_text = insult_string
     FINISHERS.shuffle()
@@ -53,4 +56,6 @@ func _on_ButtonGenerate_pressed():
     for i in range(randi() % 3 + 1):
         ex_points += "!"
     $LabelEnd.bbcode_text = "[b][right][color=#999999]" + FINISHERS[0].to_upper() + ex_points +"\""
+    clipboard_string += FINISHERS[0].to_upper() + "!"
+    OS.set_clipboard(clipboard_string)
     

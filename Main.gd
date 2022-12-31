@@ -96,11 +96,11 @@ func label_next_prev():
     var next_tool = current_tool + 1
     if next_tool > ALL_TOOLS.size() - 1:
         next_tool = 0
-    $TabInfo/ButtonNextTab/LabelTabNext.text = ALL_TOOLS[next_tool].DISPLAY_NAME
+    $TabInfo/ButtonNextTab.text = ALL_TOOLS[next_tool].DISPLAY_NAME + " ->"
     next_tool = current_tool - 1
     if next_tool < 0:
         next_tool = ALL_TOOLS.size() - 1
-    $TabInfo/ButtonPrevTab/LabelTabPrevious.text = ALL_TOOLS[next_tool].DISPLAY_NAME
+    $TabInfo/ButtonPrevTab.text = "<- " + ALL_TOOLS[next_tool].DISPLAY_NAME
 
 func _on_ButtonNextTab_pressed():
     current_tool += 1
